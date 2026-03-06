@@ -1,84 +1,148 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>SpiceTrace</title>
-<style>
-body{
-font-family:Arial;
-margin:40px;
-background:#f4f6f7;
-}
-
-.section{
-background:white;
-padding:30px;
-margin-bottom:20px;
-border-radius:8px;
-box-shadow:0 2px 5px rgba(0,0,0,0.1);
-}
-
-h1{
-color:#2c3e50;
-}
-
-button{
-background:#27ae60;
-color:white;
-padding:12px 20px;
-border:none;
-border-radius:6px;
-cursor:pointer;
-}
-</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SpiceTrace - Smart Monitoring for Spice Growers</title>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div class="section">
+<header>
 <h1>SpiceTrace</h1>
-<p>
-A monitoring and traceability support system for high-value spice growers.
-</p>
+<nav>
+<a href="#problem">Problem</a>
+<a href="#solution">Solution</a>
+<a href="#how">How it Works</a>
+<a href="#systems">Growing Systems</a>
+<a href="#dashboard">Dashboard</a>
+<a href="#contact">Join Pilot</a>
+</nav>
+</header>
+
+<section class="hero">
+<img src="images/hero-farm.jpg" alt="Spice farm">
+<div class="hero-text">
+<h2>Affordable Environmental Monitoring for Spice Growers</h2>
+<p>Improve yield using data-driven cultivation while automatically generating production records for traceability.</p>
+<button onclick="scrollToSection()">Join Early Growers</button>
+</div>
+</section>
+
+<section id="problem">
+<h2>The Problem</h2>
+<p>Spice growers face unpredictable environmental conditions, yield variability, and increasing documentation requirements for export markets.</p>
+</section>
+
+<section id="solution">
+<h2>The SpiceTrace Solution</h2>
+<img src="images/sensor-kit.jpg" alt="Sensor kit">
+<p>A low-cost environmental monitoring system designed for spice growers. Environmental data helps improve yield while automatically generating structured production records.</p>
+</section>
+
+<section id="how">
+<h2>How It Works</h2>
+
+<div class="steps">
+<div>
+<h3>1. Sensors Monitor Environment</h3>
+<p>Temperature, humidity and soil conditions are recorded in real time.</p>
 </div>
 
-<div class="section">
-<h2>Problem</h2>
-<p>
-Spice growers face difficulty maintaining environmental consistency and documenting conditions required for compliance and export markets.
-</p>
+<div>
+<h3>2. Data Sent to Dashboard</h3>
+<p>Environmental data is securely transmitted to the cloud.</p>
 </div>
 
-<div class="section">
-<h2>Solution</h2>
-<p>
-SpiceTrace provides environmental monitoring, structured data logging, and traceability support to help growers maintain quality and compliance.
-</p>
+<div>
+<h3>3. Cultivation Insights</h3>
+<p>Farmers receive alerts and insights to stabilize growing conditions.</p>
 </div>
 
-<div class="section">
-<h2>Concept Dashboard</h2>
-<p>
-Environmental data such as temperature, humidity, and light are monitored and visualized in a simple dashboard for growers.
-</p>
-
-<img src="dashboard.png" width="600">
+<div>
+<h3>4. Traceability Records Generated</h3>
+<p>Production logs are automatically created from environmental data.</p>
+</div>
 </div>
 
-<div class="section">
-<h2>Traceability</h2>
-<p>
-Each batch of spice can be linked to environmental records and production documentation.
-</p>
+</section>
+
+<section id="systems">
+
+<h2>Flexible Growing Systems</h2>
+
+<div class="systems-grid">
+
+<div>
+<img src="images/greenhouse-monitoring.jpg">
+<h3>Open Field Monitoring</h3>
+<p>Affordable sensors for small farmers growing spices in open farms.</p>
 </div>
 
-<div class="section">
-<h2>Pilot Interviews</h2>
-<p>
-We are currently speaking with spice growers and export professionals to validate this concept.
-</p>
-
-<button>Request Pilot Discussion</button>
+<div>
+<img src="images/greenhouse-monitoring.jpg">
+<h3>Greenhouse Monitoring</h3>
+<p>Advanced environmental control for higher yield consistency.</p>
 </div>
+
+<div>
+<img src="images/container-farm.jpg">
+<h3>Controlled Environment</h3>
+<p>Container farms or hydroponic systems for intensive spice cultivation.</p>
+</div>
+
+</div>
+
+</section>
+
+<section id="dashboard">
+
+<h2>Simple Farmer Dashboard</h2>
+
+<img src="images/dashboard-preview.png">
+
+<p>Farmers can monitor environmental conditions, receive alerts, and access production logs from a simple dashboard.</p>
+
+</section>
+
+<section class="video-section">
+
+<h2>System Overview</h2>
+
+<video controls width="800">
+<source src="videos/system-demo.mp4" type="video/mp4">
+</video>
+
+</section>
+
+<section id="contact">
+
+<h2>Join Our Pilot Program</h2>
+
+<p>We are currently working with early spice growers to test the SpiceTrace system.</p>
+
+<form>
+
+<input type="text" placeholder="Name">
+
+<input type="email" placeholder="Email">
+
+<input type="text" placeholder="Farm Type">
+
+<button type="submit">Request Early Access</button>
+
+</form>
+
+</section>
+
+<footer>
+
+<p>SpiceTrace – Smart Monitoring for Specialty Crop Growers</p>
+
+</footer>
+
+<script src="script.js"></script>
 
 </body>
 </html>
