@@ -7,202 +7,977 @@
 <title>SpiceTrace - Smart Monitoring for Spice Growers</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== Reset & Base ===== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --green-dark: #0f2918;
+  --green-section: #132d1c;
+  --green-mid: #2c7a4b;
+  --green-light: #3da566;
+  --turmeric: #c8920a;
+  --turmeric-hover: #e0a50c;
+  --turmeric-light: #f5c842;
+  --bg: #f5f0e8;
+  --bg-card: #ede8de;
+  --text: #2d3436;
+  --text-light: #5a6060;
+  --white: #ffffff;
+  --radius: 12px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.08);
+  --shadow-hover: 0 8px 32px rgba(0,0,0,0.14);
+  --transition: 0.3s ease;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', Arial, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.6;
+}
+
+img { max-width: 100%; display: block; }
+
+/* ===== Header ===== */
+header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  height: 64px;
+  background: var(--green-dark);
+  color: var(--white);
+  z-index: 1000;
+  transition: box-shadow var(--transition);
+}
+
+header.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.25); }
+
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--white);
+  text-decoration: none;
+  letter-spacing: -0.5px;
+}
+
+.logo .trace { color: var(--turmeric); }
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+nav a {
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color var(--transition);
+}
+
+nav a:hover { color: var(--white); }
+
+nav .nav-cta {
+  background: var(--green-mid);
+  padding: 8px 20px;
+  border-radius: 6px;
+  color: var(--white);
+  transition: background var(--transition), color var(--transition);
+}
+
+nav .nav-cta:hover {
+  background: var(--turmeric);
+  color: var(--white);
+}
+
+.mobile-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.mobile-toggle span {
+  width: 24px; height: 2px;
+  background: var(--white);
+  border-radius: 2px;
+  transition: var(--transition);
+}
+
+/* ===== Hero ===== */
+.hero {
+  position: relative;
+  margin-top: 64px;
+  overflow: hidden;
+}
+
+.hero img {
+  width: 100%;
+  height: 560px;
+  object-fit: cover;
+}
+
+.hero-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--white);
+}
+
+.hero-text h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.85rem;
+  font-weight: 900;
+  max-width: 720px;
+  margin-bottom: 16px;
+  line-height: 1.12;
+  letter-spacing: -1px;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.45);
+}
+
+.hero-text p {
+  font-size: 1.15rem;
+  max-width: 560px;
+  margin-bottom: 28px;
+  opacity: 0.95;
+  line-height: 1.6;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.4);
+}
+
+/* ===== Buttons ===== */
+.btn {
+  display: inline-block;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 8px;
+  transition: all var(--transition);
+}
+
+.btn-primary {
+  background: var(--green-mid);
+  color: var(--white);
+  padding: 14px 36px;
+}
+
+.btn-primary:hover {
+  background: var(--turmeric);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(200,146,10,0.45);
+}
+
+.btn-full { width: 100%; padding: 14px; }
+
+/* ===== Sections ===== */
+section { padding: 80px 20px; }
+
+.section-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Section label like the reference design */
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--turmeric);
+  margin-bottom: 14px;
+}
+
+.section-label::before {
+  content: '';
+  display: block;
+  width: 32px;
+  height: 2px;
+  background: var(--turmeric);
+  flex-shrink: 0;
+}
+
+h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+  color: var(--green-dark);
+}
+
+.section-subtitle {
+  color: var(--text-light);
+  font-size: 1.05rem;
+  margin-bottom: 40px;
+  max-width: 600px;
+}
+
+/* ===== Problem Section ===== */
+#problem { background: var(--white); }
+
+.problem-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  margin-top: 40px;
+}
+
+.problem-card {
+  background: var(--bg);
+  border-radius: var(--radius);
+  padding: 32px 28px;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.problem-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
+}
+
+.problem-icon { font-size: 2rem; margin-bottom: 16px; }
+
+.problem-card h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--green-dark);
+}
+
+.problem-card p {
+  color: var(--text-light);
+  font-size: 0.93rem;
+  line-height: 1.6;
+}
+
+/* ===== Solution Section ===== */
+.solution-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.solution-text p {
+  color: var(--text-light);
+  font-size: 1.05rem;
+  margin-bottom: 24px;
+  line-height: 1.7;
+}
+
+.solution-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.solution-features li {
+  padding-left: 28px;
+  position: relative;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.solution-features li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--green-mid);
+  font-weight: 700;
+}
+
+.solution-image img {
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* ===== How It Works — Dark section like reference ===== */
+#how {
+  background: var(--green-dark);
+  color: var(--white);
+}
+
+#how h2 { color: var(--white); }
+
+.steps {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  margin-top: 48px;
+}
+
+.step {
+  flex: 1;
+  text-align: center;
+  padding: 0 20px;
+  position: relative;
+}
+
+.step-number {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,0.35);
+  color: var(--white);
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  transition: border-color var(--transition), background var(--transition);
+}
+
+.step:hover .step-number {
+  border-color: var(--turmeric);
+  background: rgba(200,146,10,0.12);
+}
+
+.step h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--white);
+}
+
+.step p {
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.65;
+}
+
+.step-connector {
+  width: 80px;
+  height: 1px;
+  background: rgba(255,255,255,0.25);
+  margin-top: 32px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.step-connector::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: -3px;
+  width: 7px;
+  height: 7px;
+  border-right: 1.5px solid rgba(255,255,255,0.35);
+  border-top: 1.5px solid rgba(255,255,255,0.35);
+  transform: rotate(45deg);
+}
+
+/* ===== Systems Grid ===== */
+.systems-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.system-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.system-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+.system-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.system-card-body { padding: 24px; }
+
+.system-card-body h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--green-dark);
+}
+
+.system-card-body p {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+/* ===== Combined Insights Section ===== */
+#insights {
+  background: var(--white);
+}
+
+.insights-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 32px;
+  border-bottom: 2px solid #e0dbd0;
+}
+
+.insights-tab {
+  padding: 12px 28px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-light);
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: all var(--transition);
+  letter-spacing: 0.01em;
+}
+
+.insights-tab:hover { color: var(--green-dark); }
+
+.insights-tab.active {
+  color: var(--green-dark);
+  border-bottom-color: var(--turmeric);
+}
+
+.insights-panels { position: relative; }
+
+.insights-panel {
+  display: none;
+  animation: fadeSlide 0.4s ease;
+}
+
+.insights-panel.active { display: block; }
+
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.insights-panel img {
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  width: 100%;
+  max-height: 480px;
+  object-fit: cover;
+}
+
+.insights-panel p.panel-caption {
+  margin-top: 14px;
+  font-size: 0.88rem;
+  color: var(--text-light);
+  text-align: center;
+  font-style: italic;
+}
+
+/* Auto-advance dot indicators */
+.insights-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.insights-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #c8c0b0;
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition);
+  border: none;
+}
+
+.insights-dot.active {
+  background: var(--turmeric);
+  transform: scale(1.25);
+}
+
+/* ===== Contact / Pilot Form ===== */
+#contact {
+  background: var(--green-section);
+  color: var(--white);
+}
+
+#contact h2 { color: var(--white); }
+#contact .section-subtitle { color: rgba(255,255,255,0.7); }
+#contact .section-label { color: var(--turmeric-light); }
+#contact .section-label::before { background: var(--turmeric-light); }
+
+.pilot-form {
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.8);
+}
+
+.form-group input,
+.form-group select {
+  padding: 12px 14px;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.08);
+  color: var(--white);
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: border-color var(--transition), background var(--transition);
+}
+
+.form-group input::placeholder { color: rgba(255,255,255,0.38); }
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--turmeric);
+  background: rgba(255,255,255,0.13);
+}
+
+.form-group select option {
+  background: var(--green-dark);
+  color: var(--white);
+}
+
+.form-success {
+  max-width: 440px;
+  text-align: center;
+  padding: 40px 0;
+}
+
+.success-icon {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: var(--turmeric);
+  color: var(--white);
+  font-size: 1.5rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.form-success h3 { font-size: 1.25rem; margin-bottom: 8px; }
+.form-success p { color: rgba(255,255,255,0.75); font-size: 0.95rem; }
+
+/* ===== Footer ===== */
+footer {
+  text-align: center;
+  padding: 36px 20px;
+  background: #0b1f10;
+  color: var(--white);
+}
+
+.footer-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.footer-brand .trace { color: var(--turmeric); }
+
+.footer-tagline {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.55);
+  margin-bottom: 12px;
+}
+
+.footer-copy {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.35);
+}
+
+/* ===== Fade-in Animation ===== */
+.fade-in {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .problem-grid, .systems-grid { grid-template-columns: 1fr; gap: 20px; }
+  .solution-layout { grid-template-columns: 1fr; gap: 32px; }
+  .solution-image { order: -1; }
+  .steps { flex-direction: column; align-items: stretch; gap: 24px; }
+  .step-connector { width: 2px; height: 24px; margin: 0 auto; }
+  .step-connector::after { display: none; }
+  .step { padding: 0; }
+  .hero-text h1 { font-size: 1.9rem; }
+  .hero-text p { font-size: 1rem; }
+  .hero img { height: 420px; }
+}
+
+@media (max-width: 768px) {
+  header { padding: 0 20px; }
+  nav {
+    position: fixed;
+    top: 64px; left: 0; right: 0;
+    background: var(--green-dark);
+    flex-direction: column;
+    padding: 20px;
+    gap: 16px;
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform var(--transition), opacity var(--transition);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  }
+  nav.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+  nav .nav-cta { text-align: center; }
+  .mobile-toggle { display: flex; }
+  .mobile-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+  .mobile-toggle.active span:nth-child(2) { opacity: 0; }
+  .mobile-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+  section { padding: 60px 20px; }
+  h2 { font-size: 1.7rem; }
+  .pilot-form { width: 100%; }
+  .insights-tabs { overflow-x: auto; }
+  .insights-tab { padding: 12px 18px; white-space: nowrap; font-size: 0.82rem; }
+}
+
+@media (max-width: 480px) {
+  .hero-text h1 { font-size: 1.5rem; }
+  .hero img { height: 360px; }
+  h2 { font-size: 1.4rem; }
+}
+</style>
 </head>
 
 <body>
 
 <header id="header">
-<a href="#" class="logo">SpiceTrace</a>
-<nav id="nav">
-<a href="#problem">Problem</a>
-<a href="#solution">Solution</a>
-<a href="#how">How it Works</a>
-<a href="#systems">Growing Systems</a>
-<a href="#dashboard">Dashboard</a>
-<a href="#contact" class="nav-cta">Join Pilot</a>
-</nav>
-<button class="mobile-toggle" id="menuToggle" aria-label="Toggle navigation">
-<span></span>
-<span></span>
-<span></span>
-</button>
+  <a href="#" class="logo">Spice<span class="trace">Trace</span></a>
+  <nav id="nav">
+    <a href="#problem">Problem</a>
+    <a href="#solution">Solution</a>
+    <a href="#how">How it Works</a>
+    <a href="#systems">Growing Systems</a>
+    <a href="#insights">Dashboard</a>
+    <a href="#contact" class="nav-cta">Join Pilot</a>
+  </nav>
+  <button class="mobile-toggle" id="menuToggle" aria-label="Toggle navigation">
+    <span></span><span></span><span></span>
+  </button>
 </header>
 
+<!-- Hero -->
 <section class="hero">
-<img src="images/hero-farm.png" alt="Lush spice farm with monitoring sensors">
-<div class="hero-text">
-<h1>Affordable Environmental Monitoring for Spice Growers</h1>
-<p>Improve yield with data-driven cultivation while automatically generating production records for traceability.</p>
-<button class="btn btn-primary" onclick="scrollToSection('contact')">Join Early Growers</button>
-</div>
+  <img src="images/hero-farm.png" alt="Lush spice farm with monitoring sensors">
+  <div class="hero-text">
+    <h1>Affordable Environmental Monitoring for Spice Growers</h1>
+    <p>Improve yield with data-driven cultivation while automatically generating production records for traceability.</p>
+    <button class="btn btn-primary" onclick="scrollToSection('contact')">Join Early Growers</button>
+  </div>
 </section>
 
+<!-- Problem -->
 <section id="problem" class="fade-in">
-<div class="section-inner">
-<h2>The Problem</h2>
-<div class="problem-grid">
-<div class="problem-card">
-<div class="problem-icon">🌡️</div>
-<h3>Unpredictable Conditions</h3>
-<p>Temperature and humidity swings cause inconsistent crop quality and unexpected losses.</p>
-</div>
-<div class="problem-card">
-<div class="problem-icon">📉</div>
-<h3>Yield Variability</h3>
-<p>Without real-time data, growers can't optimize conditions for maximum output.</p>
-</div>
-<div class="problem-card">
-<div class="problem-icon">📋</div>
-<h3>Documentation Burden</h3>
-<p>Export markets require detailed production records that are time-consuming to maintain manually.</p>
-</div>
-</div>
-</div>
+  <div class="section-inner">
+    <div class="section-label">Challenges</div>
+    <h2>What's Holding Spice Growers Back</h2>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="problem-icon">🌡️</div>
+        <h3>Unpredictable Conditions</h3>
+        <p>Temperature and humidity swings cause inconsistent crop quality and unexpected losses.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">📉</div>
+        <h3>Yield Variability</h3>
+        <p>Without real-time data, growers can't optimize conditions for maximum output.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">📋</div>
+        <h3>Documentation Burden</h3>
+        <p>Export markets require detailed production records that are time-consuming to maintain manually.</p>
+      </div>
+    </div>
+  </div>
 </section>
 
+<!-- Solution -->
 <section id="solution" class="fade-in">
-<div class="section-inner solution-layout">
-<div class="solution-text">
-<h2>The SpiceTrace Solution</h2>
-<p>A low-cost environmental monitoring system designed for spice growers. Sensor data helps improve yield while automatically generating structured production records for export compliance.</p>
-<ul class="solution-features">
-<li>Real-time environmental monitoring</li>
-<li>Automated traceability documentation</li>
-<li>Actionable cultivation insights</li>
-<li>Affordable hardware for small farms</li>
-</ul>
-</div>
-<div class="solution-image">
-<img src="images/sensor-kit.png" alt="SpiceTrace sensor kit for environmental monitoring">
-</div>
-</div>
+  <div class="section-inner solution-layout">
+    <div class="solution-text">
+      <div class="section-label">Solution</div>
+      <h2>The SpiceTrace Solution</h2>
+      <p>A low-cost environmental monitoring system designed for spice growers. Sensor data helps improve yield while automatically generating structured production records for export compliance.</p>
+      <ul class="solution-features">
+        <li>Real-time environmental monitoring</li>
+        <li>Automated traceability documentation</li>
+        <li>Actionable cultivation insights</li>
+        <li>Affordable hardware for small farms</li>
+      </ul>
+    </div>
+    <div class="solution-image">
+      <img src="images/sensor-kit.png" alt="SpiceTrace sensor kit for environmental monitoring">
+    </div>
+  </div>
 </section>
 
+<!-- How It Works -->
 <section id="how" class="fade-in">
-<div class="section-inner">
-<h2>How It Works</h2>
-<div class="steps">
-<div class="step">
-<div class="step-number">1</div>
-<h3>Sensors Monitor Environment</h3>
-<p>Temperature, humidity and soil conditions are recorded in real time.</p>
-</div>
-<div class="step-connector"></div>
-<div class="step">
-<div class="step-number">2</div>
-<h3>Data Sent to Dashboard</h3>
-<p>Environmental data is securely transmitted to the cloud.</p>
-</div>
-<div class="step-connector"></div>
-<div class="step">
-<div class="step-number">3</div>
-<h3>Cultivation Insights</h3>
-<p>Farmers receive alerts and insights to stabilize growing conditions.</p>
-</div>
-<div class="step-connector"></div>
-<div class="step">
-<div class="step-number">4</div>
-<h3>Traceability Records Generated</h3>
-<p>Production logs are automatically created from environmental data.</p>
-</div>
-</div>
-</div>
+  <div class="section-inner">
+    <div class="section-label">Process</div>
+    <h2>How It Works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3>Sensors Monitor Environment</h3>
+        <p>Temperature, humidity and soil conditions are recorded in real time.</p>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3>Data Sent to Dashboard</h3>
+        <p>Environmental data is securely transmitted to the cloud.</p>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3>Cultivation Insights</h3>
+        <p>Farmers receive alerts and insights to stabilize growing conditions.</p>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step">
+        <div class="step-number">4</div>
+        <h3>Traceability Records Generated</h3>
+        <p>Production logs are automatically created from environmental data.</p>
+      </div>
+    </div>
+  </div>
 </section>
 
+<!-- Growing Systems -->
 <section id="systems" class="fade-in">
-<div class="section-inner">
-<h2>Flexible Growing Systems</h2>
-<p class="section-subtitle">SpiceTrace adapts to your growing environment</p>
-<div class="systems-grid">
-<div class="system-card">
-<img src="images/greenhouse-monitoring.png" alt="Open field spice farming with monitoring sensors">
-<div class="system-card-body">
-<h3>Open Field Monitoring</h3>
-<p>Affordable sensors for small farmers growing spices in open farms.</p>
-</div>
-</div>
-<div class="system-card">
-<img src="images/greenhouse-monitoring.png" alt="Greenhouse with environmental monitoring">
-<div class="system-card-body">
-<h3>Greenhouse Monitoring</h3>
-<p>Advanced environmental control for higher yield consistency.</p>
-</div>
-</div>
-<div class="system-card">
-<img src="images/container-farm.png" alt="Container farm for controlled environment spice cultivation">
-<div class="system-card-body">
-<h3>Controlled Environment</h3>
-<p>Container farms or hydroponic systems for intensive spice cultivation.</p>
-</div>
-</div>
-</div>
-</div>
+  <div class="section-inner">
+    <div class="section-label">Flexibility</div>
+    <h2>Flexible Growing Systems</h2>
+    <p class="section-subtitle">SpiceTrace adapts to your growing environment</p>
+    <div class="systems-grid">
+      <div class="system-card">
+        <img src="images/open-field.png" alt="Open field spice farming with monitoring sensors">
+        <div class="system-card-body">
+          <h3>Open Field Monitoring</h3>
+          <p>Affordable sensors for small farmers growing spices in open farms.</p>
+        </div>
+      </div>
+      <div class="system-card">
+        <img src="images/greenhouse-monitoring.png" alt="Greenhouse with environmental monitoring">
+        <div class="system-card-body">
+          <h3>Greenhouse Monitoring</h3>
+          <p>Advanced environmental control for higher yield consistency.</p>
+        </div>
+      </div>
+      <div class="system-card">
+        <img src="images/container-farm.png" alt="Container farm for controlled environment spice cultivation">
+        <div class="system-card-body">
+          <h3>Controlled Environment</h3>
+          <p>Container farms or hydroponic systems for intensive spice cultivation.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<section id="dashboard" class="fade-in">
-<div class="section-inner">
-<h2>Simple Farmer Dashboard</h2>
-<p class="section-subtitle">Monitor conditions, receive alerts, and access production logs — all in one place</p>
-<div class="dashboard-preview">
-<img src="images/dashboard-preview.png" alt="SpiceTrace farmer dashboard showing environmental data and alerts">
-</div>
-</div>
+<!-- Dashboard / Architecture / Traceability — combined rotating section -->
+<section id="insights" class="fade-in">
+  <div class="section-inner">
+    <div class="section-label">Platform</div>
+    <h2>From Farm to Record — All in One Platform</h2>
+    <p class="section-subtitle">Monitor your environment, visualize your system, and generate compliance-ready traceability reports.</p>
+
+    <div class="insights-tabs" role="tablist">
+      <button class="insights-tab active" data-panel="0" role="tab">Farmer Dashboard</button>
+      <button class="insights-tab" data-panel="1" role="tab">System Architecture</button>
+      <button class="insights-tab" data-panel="2" role="tab">Traceability Flow</button>
+    </div>
+
+    <div class="insights-panels">
+      <div class="insights-panel active" data-panel="0">
+        <img src="images/dashboard-preview.png" alt="SpiceTrace farmer dashboard showing environmental data and alerts">
+        <p class="panel-caption">Monitor conditions, receive alerts, and access production logs — all in one place.</p>
+      </div>
+      <div class="insights-panel" data-panel="1">
+        <img src="images/system-architecture.png" alt="SpiceTrace system architecture diagram">
+        <p class="panel-caption">From sensor to cloud — see how SpiceTrace connects your farm to the dashboard.</p>
+      </div>
+      <div class="insights-panel" data-panel="2">
+        <img src="images/traceability-flow.png" alt="SpiceTrace traceability flow diagram">
+        <p class="panel-caption">Automatic production logs created from environmental data, ready for export compliance.</p>
+      </div>
+    </div>
+
+    <div class="insights-dots">
+      <button class="insights-dot active" data-panel="0" aria-label="Dashboard"></button>
+      <button class="insights-dot" data-panel="1" aria-label="Architecture"></button>
+      <button class="insights-dot" data-panel="2" aria-label="Traceability"></button>
+    </div>
+  </div>
 </section>
 
-<section id="architecture" class="fade-in">
-<div class="section-inner">
-<h2>System Overview</h2>
-<p class="section-subtitle">From sensor to traceability report — see how SpiceTrace connects your farm to the cloud</p>
-<div class="architecture-preview">
-<img src="images/system-architecture.png" alt="SpiceTrace system architecture diagram">
-</div>
-</div>
-</section>
-
+<!-- Contact / Pilot -->
 <section id="contact" class="fade-in">
-<div class="section-inner">
-<h2>Join Our Pilot Program</h2>
-<p class="section-subtitle">We are currently working with early spice growers to test the SpiceTrace system.</p>
-<form id="pilotForm" class="pilot-form">
-<div class="form-group">
-<label for="name">Full Name</label>
-<input type="text" id="name" name="name" placeholder="e.g. Maria Santos" required>
-</div>
-<div class="form-group">
-<label for="email">Email Address</label>
-<input type="email" id="email" name="email" placeholder="e.g. maria@example.com" required>
-</div>
-<div class="form-group">
-<label for="farm">Farm Type</label>
-<select id="farm" name="farm" required>
-<option value="" disabled selected>Select your growing setup</option>
-<option value="open-field">Open Field</option>
-<option value="greenhouse">Greenhouse</option>
-<option value="container">Container Farm</option>
-<option value="hydroponic">Hydroponic</option>
-<option value="other">Other</option>
-</select>
-</div>
-<button type="submit" class="btn btn-primary btn-full">Request Early Access</button>
-</form>
-<div id="formSuccess" class="form-success" hidden>
-<div class="success-icon">✓</div>
-<h3>Thank you for your interest!</h3>
-<p>We'll be in touch soon with details about the SpiceTrace pilot program.</p>
-</div>
-</div>
+  <div class="section-inner">
+    <div class="section-label">Early Access</div>
+    <h2>Join Our Pilot Program</h2>
+    <p class="section-subtitle">We are currently working with early spice growers to test the SpiceTrace system.</p>
+    <form id="pilotForm" class="pilot-form">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" placeholder="e.g. Maria Santos" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" placeholder="e.g. maria@example.com" required>
+      </div>
+      <div class="form-group">
+        <label for="farm">Farm Type</label>
+        <select id="farm" name="farm" required>
+          <option value="" disabled selected>Select your growing setup</option>
+          <option value="open-field">Open Field</option>
+          <option value="greenhouse">Greenhouse</option>
+          <option value="container">Container Farm</option>
+          <option value="hydroponic">Hydroponic</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary btn-full">Request Early Access</button>
+    </form>
+    <div id="formSuccess" class="form-success" hidden>
+      <div class="success-icon">✓</div>
+      <h3>Thank you for your interest!</h3>
+      <p>We'll be in touch soon with details about the SpiceTrace pilot program.</p>
+    </div>
+  </div>
 </section>
 
 <footer>
-<div class="footer-inner">
-<p class="footer-brand">SpiceTrace</p>
-<p class="footer-tagline">Smart Monitoring for Specialty Crop Growers</p>
-</div>
+  <div class="footer-inner">
+    <p class="footer-brand">Spice<span class="trace">Trace</span></p>
+    <p class="footer-tagline">Smart Monitoring for Specialty Crop Growers</p>
+    <p class="footer-copy">© 2026 SpiceTrace. All rights reserved.</p>
+  </div>
 </footer>
 
-<script src="script.js"></script>
+<script>
+// Smooth scroll
+function scrollToSection(id) {
+  document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+}
 
+// Mobile nav toggle
+const menuToggle = document.getElementById("menuToggle");
+const nav = document.getElementById("nav");
+
+menuToggle.addEventListener("click", () => {
+  nav.classList.toggle("open");
+  menuToggle.classList.toggle("active");
+});
+
+nav.querySelectorAll("a").forEach(link => {
+  link.addEventListener("click", () => {
+    nav.classList.remove("open");
+    menuToggle.classList.remove("active");
+  });
+});
+
+// Header shadow on scroll
+const header = document.getElementById("header");
+window.addEventListener("scroll", () => {
+  header.classList.toggle("scrolled", window.scrollY > 10);
+});
+
+// Scroll fade-in
+const observer = new IntersectionObserver(
+  entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("visible"); }),
+  { threshold: 0.1 }
+);
+document.querySelectorAll(".fade-in").forEach(el => observer.observe(el));
+
+// Form
+const form = document.getElementById("pilotForm");
+const formSuccess = document.getElementById("formSuccess");
+form.addEventListener("submit", e => {
+  e.preventDefault();
+  form.hidden = true;
+  formSuccess.hidden = false;
+});
+
+// Insights tabs — manual + auto-rotate
+let insightsTimer;
+const panels = document.querySelectorAll(".insights-panel");
+const tabs = document.querySelectorAll(".insights-tab");
+const dots = document.querySelectorAll(".insights-dot");
+
+function activatePanel(index) {
+  panels.forEach((p, i) => p.classList.toggle("active", i === index));
+  tabs.forEach((t, i) => t.classList.toggle("active", i === index));
+  dots.forEach((d, i) => d.classList.toggle("active", i === index));
+}
+
+function startAutoRotate() {
+  clearInterval(insightsTimer);
+  insightsTimer = setInterval(() => {
+    const current = [...panels].findIndex(p => p.classList.contains("active"));
+    activatePanel((current + 1) % panels.length);
+  }, 4000);
+}
+
+[...tabs, ...dots].forEach(btn => {
+  btn.addEventListener("click", () => {
+    activatePanel(parseInt(btn.dataset.panel));
+    startAutoRotate();
+  });
+});
+
+startAutoRotate();
+</script>
 </body>
 </html>
